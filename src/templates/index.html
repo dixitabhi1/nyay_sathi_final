@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyay Sathi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .chat-panel {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid #dc3545;
+        }
+
+        .fir-panel {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid #dc3545;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #000000;
+        }
+
+        .chat-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+        }
+
+        .fir-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 18px;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .bot-message {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #000000;
+            align-self: flex-start;
+            border-bottom-left-radius: 8px;
+            border: 2px solid #dc3545;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .input-container {
+            padding: 25px;
+            border-top: 3px solid #dc3545;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 3px solid #dc3545;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .chat-input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: white;
+            border: 3px solid #dc3545;
+            padding: 15px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .send-button:hover {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-bar {
+            background: #000000;
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 25px;
+            overflow: hidden;
+            border: 1px solid #dc3545;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+
+        .fir-document {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 2px solid #dc3545;
+        }
+
+        .fir-header {
+            text-align: center;
+            border-bottom: 3px solid #000000;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            color: white;
+            margin: -25px -25px 25px -25px;
+            padding: 25px;
+            border-radius: 13px 13px 0 0;
+        }
+
+        .fir-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .fir-number {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .fir-section {
+            margin-bottom: 25px;
+        }
+
+        .fir-section h3 {
+            color: #000000;
+            border-bottom: 2px solid #dc3545;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .fir-field {
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .fir-label {
+            font-weight: bold;
+            color: #000000;
+            min-width: 140px;
+            margin-right: 15px;
+        }
+
+        .fir-value {
+            color: #333333;
+            flex: 1;
+        }
+
+        .placeholder {
+            color: #999999;
+            font-style: italic;
+        }
+
+        .sections-list {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #dc3545;
+            border-left: 6px solid #000000;
+        }
+
+        .section-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dc3545;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+        }
+
+        .section-number {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        .narrative-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #dc3545;
+            border-left: 6px solid #000000;
+            white-space: pre-line;
+            line-height: 1.8;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid;
+        }
+
+        .status-progress {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 50px 25px;
+            color: #333333;
+        }
+
+        .welcome-message h3 {
+            color: #000000;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            color: white;
+            border: 3px solid #000000;
+            padding: 18px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .start-button:hover {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .chat-panel, .fir-panel {
+                flex: none;
+                min-height: 50vh;
+            }
+            
+            .panel-header {
+                padding: 20px;
+                font-size: 18px;
+            }
+            
+            .chat-content, .fir-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <div class="panel-header">
+                🤖 Legal Assistant Chat
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="chat-content" id="chatContent">
+                <div class="welcome-message">
+                    <h3>Nyay Sathi - आपका कानूनी साथी</h3>
+                    <p>I'll help you create an incident report. The FIR document will be drafted in real-time as we chat.</p>
+                    <button class="start-button" onclick="startConversation()">Start Incident Report</button>
+                </div>
+            </div>
+            <div class="input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your response here..." disabled>
+                <button class="send-button" id="sendButton" onclick="sendMessage()" disabled>➤</button>
+            </div>
+        </div>
+
+        <!-- FIR Panel -->
+        <div class="fir-panel">
+            <div class="panel-header">
+                📄 FIR Document (Live Draft)
+            </div>
+            <div class="fir-content" id="firContent">
+                <div class="welcome-message">
+                    <h3>FIR Document Preview</h3>
+                    <p>Your FIR document will appear here as you provide information during the chat.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+        let conversationStarted = false;
+
+        function startConversation() {
+            sessionId = generateSessionId();
+            conversationStarted = true;
+            
+            // Enable input
+            document.getElementById('chatInput').disabled = false;
+            document.getElementById('sendButton').disabled = false;
+            
+            // Clear welcome message
+            document.getElementById('chatContent').innerHTML = '';
+            
+            // Start chat
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    message: ''
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.question) {
+                    addBotMessage(data.question);
+                }
+                if (data.fir_content) {
+                    updateFIRDocument(data.fir_content);
+                }
+                updateProgress(data.progress);
+                document.getElementById('chatInput').focus();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addBotMessage('Sorry, there was an error starting the conversation. Please try again.');
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message || !conversationStarted) return;
+            
+            // Add user message to chat
+            addUserMessage(message);
+            input.value = '';
+            
+            // Disable input while processing
+            input.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+            
+            // Send to backend
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.next_question) {
+                    addBotMessage(data.next_question);
+                }
+                
+                if (data.completed) {
+                    addBotMessage('✅ Thank you! Your FIR has been completed. You can see the final document on the right.');
+                    
+                    // Add PDF download button
+                    const chatContent = document.getElementById('chatContent');
+                    const downloadDiv = document.createElement('div');
+                    downloadDiv.style.textAlign = 'center';
+                    downloadDiv.style.marginTop = '20px';
+                    downloadDiv.innerHTML = `
+                        <button onclick="downloadPDF('${sessionId}')" style="
+                            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+                            color: white;
+                            border: 3px solid #dc3545;
+                            padding: 15px 30px;
+                            border-radius: 30px;
+                            cursor: pointer;
+                            font-size: 16px;
+                            margin: 10px;
+                            transition: all 0.3s ease;
+                            font-weight: bold;
+                            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                        " onmouseover="this.style.background='linear-gradient(135deg, #dc3545 0%, #b02a37 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(220, 53, 69, 0.4)'" onmouseout="this.style.background='linear-gradient(135deg, #000000 0%, #333333 100%)'; this.style.transform='translateY(0px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'">
+                            📄 Download FIR Document
+                        </button>
+                    `;
+                    chatContent.appendChild(downloadDiv);
+                    
+                    document.getElementById('chatInput').disabled = true;
+                    document.getElementById('sendButton').disabled = true;
+                } else {
+                    // Re-enable input for next response
+                    input.disabled = false;
+                    document.getElementById('sendButton').disabled = false;
+                    input.focus();
+                }
+                
+                if (data.fir_content) {
+                    updateFIRDocument(data.fir_content);
+                }
+                
+                updateProgress(data.progress);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addBotMessage('Sorry, there was an error processing your message. Please try again.');
+                input.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+            });
+        }
+
+        function addBotMessage(message) {
+            const chatContent = document.getElementById('chatContent');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            messageDiv.textContent = message;
+            chatContent.appendChild(messageDiv);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const chatContent = document.getElementById('chatContent');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = message;
+            chatContent.appendChild(messageDiv);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        function updateFIRDocument(firData) {
+            const firContent = document.getElementById('firContent');
+            
+            const statusClass = firData.status === 'Completed' ? 'status-completed' : 'status-progress';
+            
+            firContent.innerHTML = `
+                <div class="fir-document">
+                    <div class="fir-header">
+                        <div class="fir-title">FIRST INFORMATION REPORT (FIR)</div>
+                        <div class="fir-number">FIR Number: ${firData.fir_number}</div>
+                        <div class="fir-number">Date: ${firData.date_registered}</div>
+                        <span class="status-badge ${statusClass}">${firData.status}</span>
+                    </div>
+                    
+                    <div class="fir-section">
+                        <h3>Complainant Information</h3>
+                        <div class="fir-field">
+                            <span class="fir-label">Name:</span>
+                            <span class="fir-value ${firData.complainant.name.includes('[To be provided]') ? 'placeholder' : ''}">${firData.complainant.name}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Contact:</span>
+                            <span class="fir-value ${firData.complainant.contact.includes('[To be provided]') ? 'placeholder' : ''}">${firData.complainant.contact}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Address:</span>
+                            <span class="fir-value ${firData.complainant.address.includes('[To be provided]') ? 'placeholder' : ''}">${firData.complainant.address}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="fir-section">
+                        <h3>Incident Details</h3>
+                        <div class="fir-field">
+                            <span class="fir-label">Description:</span>
+                            <span class="fir-value ${firData.incident.description.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.description}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Date & Time:</span>
+                            <span class="fir-value ${firData.incident.date_time.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.date_time}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Location:</span>
+                            <span class="fir-value ${firData.incident.location.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.location}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Witnesses:</span>
+                            <span class="fir-value ${firData.incident.witnesses.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.witnesses}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Evidence:</span>
+                            <span class="fir-value ${firData.incident.evidence.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.evidence}</span>
+                        </div>
+                        <div class="fir-field">
+                            <span class="fir-label">Additional Info:</span>
+                            <span class="fir-value ${firData.incident.additional_info.includes('[To be provided]') ? 'placeholder' : ''}">${firData.incident.additional_info}</span>
+                        </div>
+                    </div>
+                    
+                    ${firData.applicable_sections.length > 0 ? `
+                    <div class="fir-section">
+                        <h3>लागू कानूनी धाराएं / Applicable Legal Sections</h3>
+                        <div class="sections-list">
+                            ${firData.applicable_sections.map(section => `
+                                <div class="section-item">
+                                    <div style="margin-bottom: 8px;">
+                                        <span class="section-number">${section.section}:</span> <strong>${section.title}</strong>
+                                    </div>
+                                    <div style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
+                                        ${section.content}
+                                    </div>
+                                    ${section.reasoning ? `
+                                        <div style="background: #fff3cd; padding: 8px; border-radius: 4px; border-left: 3px solid #ffc107; font-size: 0.85em;">
+                                            <strong>कारण / Reasoning:</strong> ${section.reasoning}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    ${firData.narrative && !firData.narrative.includes('[To be provided]') ? `
+                    <div class="fir-section">
+                        <h3>Incident Narrative</h3>
+                        <div class="narrative-box">${firData.narrative}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function updateProgress(progress) {
+            if (progress) {
+                const percentage = (progress.current / progress.total) * 100;
+                document.getElementById('progressFill').style.width = percentage + '%';
+            }
+        }
+
+        function generateSessionId() {
+            return 'session_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function downloadPDF(sessionId) {
+            // Create a temporary link to download the PDF
+            const link = document.createElement('a');
+            link.href = `/api/download_pdf/${sessionId}`;
+            link.download = `FIR_${sessionId}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Allow Enter key to send message
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
+
